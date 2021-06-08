@@ -3,7 +3,8 @@
 A simple rsync server/client Docker image to easily rsync data within Docker volumes
 
 # Notice that this is a fork from https://hub.docker.com/r/eeacms/rsync - all credit goes here. 
-# I have implemented the change from Issue #4 on github where we need persistent storage for our ssh keys. Mount your storage in /ssh_host_keys/
+# I have implemented the change from Issue #4 on github where we need persistent storage for our ssh keys. Mount your storage in /ssh-keys/
+If you need a docker-compose file leo posted one here: https://github.com/eea/eea.docker.rsync/issues/4 (change the mount from ssh_host_keys to ssh-keys)
 
 ## Simple Usage
 
