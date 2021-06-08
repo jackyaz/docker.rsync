@@ -32,14 +32,22 @@ for item in `env`; do
    esac
 done
 
-# Generate host SSH keys
-if [ ! -e /etc/ssh/ssh_host_rsa_key.pub ]; then
+# Implemented changes from https://github.com/eea/eea.docker.rsync/issues/4
+# All credit to https://github.com/leopignataro for these changes
+# Mount your persistent storage to /ssh_host_keys/
+if [ -e /ssh_host_keys/ssh_host_rsa_key.pub ]; then
+  # Copy persistent host keys
+  echo "Using existing SSH host keys"
+  cp /ssh_host_keys/* /etc/ssh/
+elif [ ! -e /etc/ssh/ssh_host_rsa_key.pub ]; then
+  # Generate host SSH keys
+  echo "Generating SSH host keys"
   ssh-keygen -A
-fi
-
-# Generate root SSH key
-if [ ! -e /root/.ssh/id_rsa.pub ]; then
-  ssh-keygen -q -N "" -f /root/.ssh/id_rsa
+  if [ -d /ssh_host_keys ]; then
+    # Store generated keys on persistent volume
+    echo "Persisting SSH host keys"
+    cp -u /etc/ssh/ssh_host_* /ssh_host_keys/
+  fi
 fi
 
 ################################################################################
