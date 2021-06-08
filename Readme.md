@@ -2,6 +2,9 @@
 
 A simple rsync server/client Docker image to easily rsync data within Docker volumes
 
+# Notice that this is a fork from https://hub.docker.com/r/eeacms/rsync - all credit goes here. 
+# I have implemented the change from Issue #4 on github where we need persistent storage for our ssh keys. Mount your storage in /ssh_host_keys/
+
 ## Simple Usage
 
 Get files from remote server within a `docker volume`:

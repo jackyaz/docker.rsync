@@ -39,6 +39,8 @@ if [ -e /ssh_host_keys/ssh_host_rsa_key.pub ]; then
   # Copy persistent host keys
   echo "Using existing SSH host keys"
   cp /ssh_host_keys/* /etc/ssh/
+  cp /ssh/host_keys/ssh_host_rsa_key.pub /root/.ssh/id_rsa.pub
+  cp /ssh/host_keys/ssh_host_rsa_key /root/.ssh/id_rsa
 elif [ ! -e /etc/ssh/ssh_host_rsa_key.pub ]; then
   # Generate host SSH keys
   echo "Generating SSH host keys"
@@ -49,6 +51,7 @@ elif [ ! -e /etc/ssh/ssh_host_rsa_key.pub ]; then
     cp -u /etc/ssh/ssh_host_* /ssh_host_keys/
   fi
 fi
+
 
 ################################################################################
 # START as SERVER
