@@ -42,20 +42,15 @@ if [ -e /ssh-keys/root/id_rsa.pub ]; then
   cp /ssh-keys/root/* /root/.ssh/
 # Check if Host SSH keys exists in our mounted folder /ssh-keys
 elif [ ! -e /ssh-keys/host/ssh_host_rsa_key.pub ]; then
+  mkdir /ssh-keys/host/
+  mkdir /ssh-keys/root/
   echo "Generating SSH host keys"
   ssh-keygen -A
-  if [ -d /ssh-keys/host ]; then
   echo "Copying SSH host keys to persistent storage"
   cp -u /etc/ssh/ssh_host_* /ssh-keys/host/ 
-  fi 
-# Check if root SSH keys exists in our mounted folder /ssh-keys
-  if [ ! -e /ssh-keys/root/id_rsa.pub ]; then
-    ssh-keygen -q -N "" -f /root/.ssh/id_rsa
-    if [ -d /ssh-keys/host ]; then
-    echo "Copying SSH host keys to persistent storage"
-    cp -u /root/.ssh/id_rsa* /ssh-keys/root/ 
-    fi 
-  fi
+  ssh-keygen -q -N "" -f /root/.ssh/id_rsa
+  echo "Copying SSH host keys to persistent storage"
+  cp -u /root/.ssh/id_rsa* /ssh-keys/root/ 
 fi
 
 
