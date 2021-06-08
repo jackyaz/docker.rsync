@@ -35,20 +35,26 @@ done
 # Implemented changes from https://github.com/eea/eea.docker.rsync/issues/4
 # All credit to https://github.com/leopignataro for these changes
 # Mount your persistent storage to /ssh_host_keys/
-if [ -e /ssh_host_keys/ssh_host_rsa_key.pub ]; then
-  # Copy persistent host keys
-  echo "Using existing SSH host keys"
-  cp /ssh_host_keys/* /etc/ssh/
-  cp /ssh/host_keys/ssh_host_rsa_key.pub /root/.ssh/id_rsa.pub
-  cp /ssh/host_keys/ssh_host_rsa_key /root/.ssh/id_rsa
-elif [ ! -e /etc/ssh/ssh_host_rsa_key.pub ]; then
-  # Generate host SSH keys
+# Check if we already have our keys mounted 
+if [ -e /ssh-keys/root/id_rsa.pub ]; then
+  echo "Copying existing keys" 
+  cp /ssh-keys/host/* /etc/ssh/ 
+  cp /ssh-keys/root/* /root/.ssh/
+# Check if Host SSH keys exists in our mounted folder /ssh-keys
+elif [ ! -e /ssh-keys/host/ssh_host_rsa_key.pub ]; then
   echo "Generating SSH host keys"
   ssh-keygen -A
-  if [ -d /ssh_host_keys ]; then
-    # Store generated keys on persistent volume
-    echo "Persisting SSH host keys"
-    cp -u /etc/ssh/ssh_host_* /ssh_host_keys/
+  if [ -d /ssh-keys/host ]; then
+  echo "Copying SSH host keys to persistent storage"
+  cp -u /etc/ssh/ssh_host_* /ssh-keys/host/ 
+  fi 
+# Check if root SSH keys exists in our mounted folder /ssh-keys
+  if [ ! -e /ssh-keys/root/id_rsa.pub ]; then
+    ssh-keygen -q -N "" -f /root/.ssh/id_rsa
+    if [ -d /ssh-keys/host ]; then
+    echo "Copying SSH host keys to persistent storage"
+    cp -u /root/.ssh/id_rsa* /ssh-keys/root/ 
+    fi 
   fi
 fi
 
